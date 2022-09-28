@@ -4,12 +4,23 @@ class Mestre(db.Model):
     user = db.Column(db.String(254),primary_key=True)
     senha = db.String(db.String(254))
 
+    def __str__(self):
+        s = self.user
+        return s
+
+class Jogador(db.Model):
+    user = db.Column(db.String(254),primary_key=True)
+    senha = db.String(db.String(254))
+
+    def __str__(self):
+        s = self.user
+        return s
+
 
 class Personagem(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    mestreid = db.Column(db.String(254),db.ForeignKey(Mestre.user),nullable = False) # Utilizado para reconhecer a qual mesa pertence o personagem
-    user = db.Column(db.String(254)) # Utilizado para login.
-    senha = db.String(db.String(254)) # Utilizado para login.
+    mestreid = db.Column(db.String(254),db.ForeignKey(Mestre.user),nullable = False) # Utilizado para reconhecer a qual mesa pertence o personagem.
+    jogadorid = db.Column(db.String(254),db.ForeignKey(Mestre.user),nullable = False) # Utilizado para reconhecer o jogador que criou o personagem.
     nome_do_personagem = db.Column(db.String(254))
     idade = db.Column(db.Integer)
     vida = db.Column(db.Integer)
@@ -34,6 +45,11 @@ class Personagem(db.Model):
             'presença':self.presenca,
             'vigor':self.vigor
         }
+    
+    def __str__(self):
+        s = (self.nome_do_personagem,self.idade,self.sanidade,self.pe,self.forca,
+                        self.agilidade,self.intelecto,self.presenca,self.vigor)
+        return s
 
 
 
