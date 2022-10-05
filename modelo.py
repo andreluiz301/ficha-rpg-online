@@ -1,54 +1,58 @@
 from config import db
 
 class Mestre(db.Model):
-    user = db.Column(db.String(254),primary_key=True)
-    senha = db.String(db.String(254))
+    userid = db.Column(db.String(254),primary_key=True)
+    senha = db.Column(db.String(254))
 
     def __str__(self):
-        s = self.user
+        s = self.userid
         return s
 
 class Jogador(db.Model):
-    user = db.Column(db.String(254),primary_key=True)
-    senha = db.String(db.String(254))
+    userid = db.Column(db.String(254),primary_key=True)
+    senha = db.Column(db.String(254))
 
     def __str__(self):
-        s = self.user
+        s = self.userid
         return s
 
 
 class Personagem(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    mestreid = db.Column(db.String(254),db.ForeignKey(Mestre.user),nullable = False) # Utilizado para reconhecer a qual mesa pertence o personagem.
-    jogadorid = db.Column(db.String(254),db.ForeignKey(Mestre.user),nullable = False) # Utilizado para reconhecer o jogador que criou o personagem.
+    mestreid = db.Column(db.String(254),db.ForeignKey(Mestre.userid),nullable = False) # Utilizado para reconhecer a qual mesa pertence o personagem.
+    jogadorid = db.Column(db.String(254),db.ForeignKey(Jogador.userid),nullable = False) # Utilizado para reconhecer o jogador que criou o personagem.
     nome_do_personagem = db.Column(db.String(254))
-    vida_max = db.Column(db.Integer)
-    sanidade_max = db.Column(db.Integer)
-    pe_max = db.Column(db.Integer) #Pontos de esforço.
+    vd_max = db.Column(db.Integer) # Vida maxíma sem bonus.
+    vd_atual = db.Column(db.Integer) # Vida atual (pode ultrapassar a vida maxíma).
+    san_max = db.Column(db.Integer) # Sanidade maxíma. 
+    san_atual = db.Column(db.Integer) # Sanidade atual não pode ser maior que maxíma.
+    pe_max = db.Column(db.Integer) # Pontos de esforço maxímos.
+    pe_atual = db.Column(db.Integer) # Ponto de esforço atuais (pode ultrapassar o pe maxímo).
     forca = db.Column(db.Integer)
-    agilidade = db.Column(db.Integer)
-    intelecto = db.Column(db.Integer) 
-    presenca = db.Column(db.Integer) # Capacidade de socialização ou percepção do ambiente.
-    vigor = db.Column(db.Integer)   # Resistência física 
+    agi = db.Column(db.Integer) # Agilidade de um personagem.
+    int = db.Column(db.Integer) # Int de um personagem.
+    pre = db.Column(db.Integer) # Capacidade de socialização ou percepção do ambiente.
+    vig = db.Column(db.Integer) # Resistência física.
 
     def retorna_personagem(self):
         personagem = {
-            'nome':self.nome,
-            'vida':self.vida,
-            'sanidade':self.sanidade,
-            'pe':self.pe,
-            'idade':self.idade,
+            'nome':self.nome_do_personagem,
+            'vd_max':self.vd_max,
+            'vd': self.vd_atual,
+            'san_max':self.san_max,
+            'san_atual':self.san_atual,
+            'pe_max':self.pe_max,
+            'pe_atual':self.pe_atual,
             'forca':self.forca,
-            'agilidade':self.agilidade,
-            'intelecto':self.intelecto,
-            'presença':self.presenca,
-            'vigor':self.vigor
+            'agi':self.agi,
+            'int':self.int,
+            'pre':self.pre,
+            'vig':self.vig
         }
         return personagem
     
     def __str__(self):
-        s = (self.nome_do_personagem,self.idade,self.sanidade,self.pe,self.forca,
-                        self.agilidade,self.intelecto,self.presenca,self.vigor)
+        s = f"{self.nome_do_personagem},{self.san_max},{self.pe_max},{self.forca},{self.agi},{self.int},{self.pre},{self.vig}"
         return s
 
 class Ficha(db.Model):
@@ -65,13 +69,13 @@ class  Inventario(db.Model):
     personagem = db.Column(db.String(254),db.ForeignKey(Personagem.id),nullable = False)
 
     def retorna_inventario(self):
-        inventario = self.itens
+        inventario = db.session.query(Item.nome,Item.atributos).filter(Item.id==self.itens).all()
         return inventario
 
 class Item(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     inventario = db.Column(db.String(254),db.ForeignKey(Inventario.id),nullable = False)
-    item = db.relationship('Item', backref='Inventario',)
+    inventarios = db.relationship('Inventario',backref = 'itens')
     nome = db.Column(db.String(254))
     utilidade = db.Column(db.String(254))
     atributos = db.Column(db.String(254))
