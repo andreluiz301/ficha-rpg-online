@@ -1,4 +1,4 @@
-from config import db
+from modelo_config_bd.config import db
 
 class Mestre(db.Model):
     userid = db.Column(db.String(254),primary_key=True)
@@ -22,6 +22,8 @@ class Personagem(db.Model):
     mestreid = db.Column(db.String(254),db.ForeignKey(Mestre.userid),nullable = False) # Utilizado para reconhecer a qual mesa pertence o personagem.
     jogadorid = db.Column(db.String(254),db.ForeignKey(Jogador.userid),nullable = False) # Utilizado para reconhecer o jogador que criou o personagem.
     nome_do_personagem = db.Column(db.String(254))
+    nex = db.Column(db.String(254)) # Nível de exposição paranormal de um personagem(sempre aumenta de 5 em 5, sendo 5% o inicial).
+    afinidade = db.Column(db.String(254)) # Afinidade elemental de um personagem(apenas adquirida depois dos 50% de NEX).
     vd_max = db.Column(db.Integer) # Vida maxíma sem bonus.
     vd_atual = db.Column(db.Integer) # Vida atual (pode ultrapassar a vida maxíma).
     san_max = db.Column(db.Integer) # Sanidade maxíma. 

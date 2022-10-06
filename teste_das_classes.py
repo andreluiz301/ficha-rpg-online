@@ -1,5 +1,4 @@
-from modelo import *
-
+from modelo_config_bd.modelo import *
 
 if __name__ == '__main__':
     db.drop_all()
