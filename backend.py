@@ -149,4 +149,16 @@ def update_personagem_simples(identificador):
             except Exception as e:
                 resposta = jsonify({'resultado':'erro','detalhes':str(e)})
             return resposta
+
+@app.route('/deletar_personagem', methods = ['Delete'])
+def deletar_personagem():
+    try:
+        resposta = jsonify({'resultado':'ok'})
+        dados = request.json(force = True)
+        personagem = db.session.query(Personagem).filter_by(id = dados['id']).first()
+        db.session.delete(personagem)
+        db.session.commit
+    except Exception as e:
+        resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+    return resposta
     
