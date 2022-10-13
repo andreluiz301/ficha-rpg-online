@@ -60,7 +60,7 @@ class Personagem(db.Model):
 class Ficha(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     ficha_path = db.Column(db.Text)
-    personagem = db.Column(db.Integer,db.ForeignKey(Personagem.id),nullable = False)
+    personagem = db.Column(db.String(254),db.ForeignKey(Personagem.id),nullable = False)
 
     def retorna_ficha(self):
         ficha_path = self.ficha_path
@@ -68,16 +68,15 @@ class Ficha(db.Model):
 
 class  Inventario(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    personagem = db.Column(db.Integer,db.ForeignKey(Personagem.id),nullable = False)
+    personagem = db.Column(db.String(254),db.ForeignKey(Personagem.id),nullable = False)
 
     def retorna_inventario(self):
         inventario = db.session.query(Item.nome,Item.atributos).filter(Item.id==self.itens).all()
-        inv_json =[ p.retorna_item() for x in inventario]
-        return inv_json
+        return inventario
 
 class Item(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    inventario = db.Column(db.Integer,db.ForeignKey(Inventario.id),nullable = False)
+    inventario = db.Column(db.String(254),db.ForeignKey(Inventario.id),nullable = False)
     inventarios = db.relationship('Inventario',backref = 'itens')
     nome = db.Column(db.String(254))
     utilidade = db.Column(db.String(254))
@@ -85,12 +84,4 @@ class Item(db.Model):
 
     def __str__(self):
         item = f'{self.nome},{self.utilidade},{self.atributos}'
-        return item
-
-    def retorna_item(self):
-        item = {
-            'nome':self.nome,
-            'utilidade':self.utilidade,
-            'atributos':self.atributos
-        }
         return item
