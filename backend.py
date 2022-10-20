@@ -18,7 +18,7 @@ def cadastrar_mestre():
         resposta = jsonify({'resultado':'ok'})
         dados = request.json(force=True)
         mestre = Mestre(userid=dados['user'],senha=dados['senha'])
-        if (mestre.userid.repalce(old=' ',new='')) > 3:
+        if (mestre.userid.replace(old=' ',new='')) > 3: # Verifica se o usuário possui caracteres válidos.
             resposta = jsonify({'resultado':'user invalid'})
             return resposta
         db.session.add(mestre)
@@ -30,7 +30,7 @@ def cadastrar_mestre():
 
 @app.route('/cadastrar_jogador',methods=['POST'])# curl -X POST localhost:5000/cadastrar_jogador -d {'userid':'Spadez','senha':'123456789'} -H 'Content-Type: application/json'
 def cadastrar_jogador():
-    """Rota responsável por cadastrar um jogador
+    """Rota responsável por cadastrar um jogador.
 
     Returns:
         resposta(json): mensagem de sucesso caso tudo ocorra bem.
@@ -39,7 +39,7 @@ def cadastrar_jogador():
         resposta = jsonify({'resultado':'ok'})
         dados = request.json(force=True)
         jogador = Jogador(userid=dados['user'],senha=dados['senha'])
-        if (jogador.userid.repalce(old=' ',new='')) > 3:
+        if (jogador.userid.replace(old=' ',new='')) > 3:
             resposta = jsonify({'resultado':'user invalid'})
             return resposta
         db.session.add(mestre)
@@ -113,7 +113,7 @@ def criar_personagem():
 
 @app.route('/listar/<string:identificador',methods = ['POST']) #curl -X GET localhost:5000/lista/player -d {'id':'Spadez'} -H 'Content-Type: application/json'
 def listar(identificador):
-    """Realiza a listagem de alguns registros
+    """Realiza a listagem de alguns registros.
 
     Args:
         identificador (string): Identifica qual é a tebela de listagem.
@@ -123,15 +123,15 @@ def listar(identificador):
     """
     try:
         dados = request.get_json(force=True)
-        if identificador == 'player':
+        if identificador == 'player': # Caso seja um jogador chamando a função ela retornará o seu personagem.
             person = db.session.query(Personagem).filter_by(id = dados['id']).first()
             personagem = person.retorna_personagem()
             resposta = personagem
-        elif identificador == 'mestre':
+        elif identificador == 'mestre': # Caso seja um mestre a função retornará todos os jogadores da sessão.
             personagem =  db.session.query(Personagem).filter_by(mestreid = dados['id']).all()
             person_json =[ x.retorna_personagem() for x in personagem ]
             resposta = personagem
-        elif identificador == 'inventario':
+        elif identificador == 'inventario': # Retornará o inventario do jogador.
             inventario = db.session.query(Inventario).filter_by(personagem=dados['id']).all()
             itens_json =[ x.retorna_item() for x in inventario]
     except Exception as e:
@@ -144,15 +144,17 @@ def update_personagem_simples(identificador):
     """Realiza o update dos dados de um personagem.
 
     Args:
-        identificador (string): Indica o tipo de update do personagem
+        identificador (string): Indica o tipo de update do personagem.
 
     Returns:
         resposta: Retorna sucesso caso tudo ocorra certo.
     """
-    if identificador == 'simples':    
+    if identificador == 'simples':
+    # O update simples será utilizado durante as sessões, principalmente durante cenas de combate.
+    # Realiza a atualização de poucos atribuitos como vida, sanidade e pontos de esforço.
         try:
             dados = request.get_json(force=True)
-            personagem = db.session.query(Personagem).filter_by(id = dados['id']).first()
+            personagem = db.session.query(Personagem).filter_by(id = dados['id']).first()# Encontra o registro que sera modificado.
             if dados['dano_sofrido'] is not None:
                 personagem.vd_atual = personagem.vd_atual - dados['dano_sofrido']
             if dados['cura'] is not None:
@@ -169,9 +171,11 @@ def update_personagem_simples(identificador):
             resposta = jsonify({'resultado':'erro','detalhes':str(e)})
         return resposta
     elif identificador == 'complexo':
+    # O update complexo será utilizado quando um jogador subir de nível ou receber um item que quebra os limites padrões de atributos.
+    # Realiza a atualização de quase todos os atributos de um personagem.
         try:
             dados = request.json(force=True)
-            personagem = db.session.query(Personagem).filter_by(id = dados['id']).first()
+            personagem = db.session.query(Personagem).filter_by(id = dados['id']).first()# Encontra o registro que sera modificado.
             if dados['nex'] is not None:
                 personagem.nex = dados['nex']
             if dados['vd_max'] is not None:
@@ -205,7 +209,7 @@ def deletar_personagem():
     """Deleta um personagem do banco de dados.
 
     Returns:
-        resposta: Retorna sucesso caso tudo ocorra certo
+        resposta: Retorna sucesso caso tudo ocorra certo.
     """
     try:
         dados = request.json(force = True)
@@ -219,7 +223,7 @@ def deletar_personagem():
 
 @app.route('/cadastrar_item',methods=['POST']) # curl -X POST localhost:5000/ -d{'id':'Spadez','nome':'adaga','atributo':'agid20','utilidade':'dano:1d4+agi'} -H 'Content-Type: application/json'
 def cadastrar_item():
-    """Realiza o cadastro de um item
+    """Realiza o cadastro de um item.
 
     Returns:
         resposta(json): Retorna sucesso caso o item seja cadstrado.
