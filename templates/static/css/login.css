@@ -32,17 +32,17 @@ h1 {
 }
 .inputs {
     width: 15em; 
-    height: 1.8em;
-    border-radius: 2px;
+    height: 2.3em;
+    border-radius: 20px;
     margin: 5px;
     padding-left: 10px;
-    background: transparent;
-    color: white;
-    border: 1px solid white;
+    background: whitesmoke;
+    color: black;
+    border: 5px solid white;
 }
 .inputs:hover {
     transition: 1;
-    border: 1px solid white;
+    border-radius: 8px;
 }
 .header {
     position: relative;
@@ -70,7 +70,7 @@ h1 {
 }
 .login {
     width: 350px;
-    box-shadow: 0 0 20px 2px black;
+    /* box-shadow: 0px 5px 25px 1px black; */
     border-radius: 5px; 
     margin: 20px;
 }
@@ -85,3 +85,47 @@ h1 {
 .texto-login {
     margin-top: 15px;
 }
+
+
+.flexx {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-field {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .input-field input {
+    /* margin: 10px 0; */
+    width: 200px;
+    display: block;
+    border: none;
+    padding: 10px 0;
+    border-bottom: solid 1px #661515;
+    -webkit-transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    background: -webkit-linear-gradient(top, transparent 96%, #661515 4%);
+    background: -webkit-linear-gradient(to bottom, transparent 96%, #661515 4%);
+    background-position: -200px 0;
+    background-size: 200px 100%;
+    background-repeat: no-repeat;
+    color: white;
+  }
+  
+  .input-field input:focus {
+    box-shadow: none;
+    outline: none;
+    background-position: 0 0;
+    margin: 10px 0;
+  }
+  
+  .input-field label {
+    color: white;
+    font-size: 105%;
+    position: absolute;
+    top: 12px;
+    transition: .2s ease-out;
+  } 
