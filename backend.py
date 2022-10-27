@@ -42,7 +42,7 @@ def cadastrar_jogador():
         if (jogador.userid.replace(old=' ',new='')) > 3:
             resposta = jsonify({'resultado':'user invalid'})
             return resposta
-        db.session.add(mestre)
+        db.session.add(jogador)
         db.session.commit()
         resposta = jsonify({'resultado':'sucesso'})
     except Exception as e:
@@ -97,9 +97,9 @@ def criar_personagem():
         resposta = jsonify({'resultado':'ok'})
         dados = request.get_json(force=True)
         personagem = Personagem(**dados)
-        setattr(personagem, vd_atual, personagem.vd_max)
-        setattr(personagem, pe_atual, personagem.pe_max) 
-        setattr(personagem, san_atual, personagem.san_max)  
+        setattr(personagem, personagem.vd_atual, personagem.vd_max)
+        setattr(personagem, personagem.pe_atual, personagem.pe_max) 
+        setattr(personagem, personagem.san_atual, personagem.san_max)  
         inventario = Inventario(personagem=personagem.id)
         db.session.add(personagem)
         db.session.add(inventario)
@@ -239,3 +239,5 @@ def cadastrar_item():
     except Exception as e:
         resposta = jsonify({'resultado':'erro','detalhes':str(e)})
     return resposta
+
+app.run(debug=True,host='0.0.0.0')
