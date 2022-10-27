@@ -93,7 +93,7 @@ def logar_mestre():
 
 @app.route("/criar_personagem",methods=["POST"]) 
 def criar_personagem():
-#  curl -X POST localhost:5000/criar_personagem -d '{"mestreid":"Spadez","jogadorid":"Spadez","nome_do_personagem":"Ricardo","nex":"5%","forca":1,"agi":1,"int":1,"pre":1,"vig":1,"vd_max":20,"san_max":20,pe_max:10}' -H "Content-Type: application/json"
+#  curl -X POST localhost:5000/criar_personagem -d '{"mestreid":"Spadez","jogadorid":"Spadez","nome_do_personagem":"Ricardo","nex":"5%","forca":1,"agi":1,"int":1,"pre":1,"vig":1,"vd_max":20,"san_max":20,"pe_max":10}' -H "Content-Type: application/json"
     """Realiza o cadastro de um personagem de rpg.
 
     Returns:
@@ -102,16 +102,18 @@ def criar_personagem():
     try:
         resposta = jsonify({"resultado":"ok"})
         dados = request.get_json(force=True)
+        print(dados)
         personagem = Personagem(**dados)
-        setattr(personagem, personagem.vd_atual, personagem.vd_max)
-        setattr(personagem, personagem.pe_atual, personagem.pe_max) 
-        setattr(personagem, personagem.san_atual, personagem.san_max)  
-        inventario = Inventario(personagem=personagem.id)
+        personagem.vd_atual = personagem.vd_max
+        personagem.pe_atual = personagem.pe_max
+        personagem.san_atual = personagem.san_max 
         db.session.add(personagem)
+        personagem = db.session.query(Personagem.id).filter_by(jogadorid=personagem.jogadorid).first()
+        inventario = Inventario(personagem=personagem.id)
         db.session.add(inventario)
         db.session.commit()
         personagem2 = db.session.query(Personagem.id).filter_by(jogadorid=dados["jogadorid"]).first()
-        resposta = jsonify({"resultado":"sucesso","detalhes":"id"})
+        resposta = jsonify({"resultado":"sucesso","detalhes":personagem.id})
     except Exception as e :
         resposta = jsonify({"resultado":"erro","detalhes":str(e)})
     resposta.headers.add("Access-Control-Allow-Origin", "*")
