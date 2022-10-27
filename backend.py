@@ -6,6 +6,7 @@ def index():
     print('''Este é o Mundo Paranormal, 
     um projeto web que visa ajudar no gerenciamento das sessões de tabletopRPGs do sitema ordem paranormal''')
     print('''Github: https://github.com/andreluiz301/ficha-rpg-online''')
+    return 'oi'
     #render_template('index.html')
 
 @app.route('/cadastrar_mestre',methods=['POST']) # curl -X POST localhost:5000/cadastrar_mestre -d {'userid':'Spadez','senha':'123456789'} -H 'Content-Type: application/json'
@@ -17,8 +18,8 @@ def cadastrar_mestre():
     try:
         resposta = jsonify({'resultado':'ok'})
         dados = request.json(force=True)
-        mestre = Mestre(userid=dados['user'],senha=dados['senha'])
-        if (mestre.userid.replace(old=' ',new='')) > 3: # Verifica se o usuário possui caracteres válidos.
+        mestre = Mestre(**dados)
+        if len(mestre.userid.replace(old=' ',new='')) > 3: # Verifica se o usuário possui caracteres válidos.
             resposta = jsonify({'resultado':'user invalid'})
             return resposta
         db.session.add(mestre)
@@ -26,6 +27,7 @@ def cadastrar_mestre():
         resposta = jsonify({'resultado':'sucesso'})
     except Exception as e:
         resposta = jsonify({'resposta':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 @app.route('/cadastrar_jogador',methods=['POST'])# curl -X POST localhost:5000/cadastrar_jogador -d {'userid':'Spadez','senha':'123456789'} -H 'Content-Type: application/json'
@@ -47,6 +49,7 @@ def cadastrar_jogador():
         resposta = jsonify({'resultado':'sucesso'})
     except Exception as e:
         resposta = jsonify({'resposta':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 @app.route('/login_jogador',methods=['POST'])# curl -X POST localhost:5000/cadastrar_jogador -d {'userid':'Spadez','senha':'123456789'} -H 'Content-Type: application/json'
@@ -65,6 +68,7 @@ def logar_jogador():
         resposta  = jsonify({'resultado':'sucesso','jwt':jw_token})
     except Exception as e:
         resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 @app.route('/login_mestre',methods=['POST'])# curl -X POST localhost:5000/login_mestre -d {'userid':'Spadez','senha':'123456789'} -H 'Content-Type: application/json'
@@ -83,6 +87,7 @@ def logar_mestre():
         resposta  = jsonify({'resultado':'sucesso','jwt':jw_token})
     except Exception as e:
         resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 @app.route('/criar_personagem',methods=['POST']) 
@@ -108,10 +113,11 @@ def criar_personagem():
         resposta = jsonify({'resultado':'sucesso','detalhes':'id'})
     except Exception as e :
         resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 
-@app.route('/listar/<string:identificador',methods = ['POST']) #curl -X GET localhost:5000/lista/player -d {'id':'Spadez'} -H 'Content-Type: application/json'
+@app.route('/listar/<string:identificador>',methods = ['POST']) #curl -X GET localhost:5000/lista/player -d {'id':'Spadez'} -H 'Content-Type: application/json'
 def listar(identificador):
     """Realiza a listagem de alguns registros.
 
@@ -136,6 +142,7 @@ def listar(identificador):
             itens_json =[ x.retorna_item() for x in inventario]
     except Exception as e:
         resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 # curl -X PUT localhost:/update_personagem/simples -d{'id':'Spadez',dano_sofrido':6,'dano_mental':5} -H 'Content-Type:application/json'
@@ -169,6 +176,7 @@ def update_personagem_simples(identificador):
             resposta = jsonify({'resultado':'sucesso'})
         except Exception as e:
             resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+        resposta.headers.add("Access-Control-Allow-Origin", '*')
         return resposta
     elif identificador == 'complexo':
     # O update complexo será utilizado quando um jogador subir de nível ou receber um item que quebra os limites padrões de atributos.
@@ -202,6 +210,7 @@ def update_personagem_simples(identificador):
             db.session.comit()
         except Exception as e:
             resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+        resposta.headers.add("Access-Control-Allow-Origin", '*')
         return resposta
 
 @app.route('/deletar_personagem', methods = ['DELETE'])# curl -X DELETE localhost:5000/deletar_personagem -d{'id':'Spadez'} -H 'Content-Type: application/json'
@@ -219,6 +228,7 @@ def deletar_personagem():
         resposta = jsonify({'resultado':'sucesso'})
     except Exception as e:
         resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 @app.route('/cadastrar_item',methods=['POST']) # curl -X POST localhost:5000/ -d{'id':'Spadez','nome':'adaga','atributo':'agid20','utilidade':'dano:1d4+agi'} -H 'Content-Type: application/json'
@@ -238,6 +248,7 @@ def cadastrar_item():
         resposta = jsonify({'resultado':'sucesso'})
     except Exception as e:
         resposta = jsonify({'resultado':'erro','detalhes':str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", '*')
     return resposta
 
 app.run(debug=True,host='0.0.0.0')

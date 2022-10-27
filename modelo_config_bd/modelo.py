@@ -1,4 +1,4 @@
-from modelo_config_bd.config import db
+from modelo_config_bd.config import *
 
 class Mestre(db.Model):
     userid = db.Column(db.String(254),primary_key=True)
@@ -72,7 +72,7 @@ class  Inventario(db.Model):
 
     def retorna_inventario(self):
         inventario = db.session.query(Item.nome,Item.atributos).filter(Item.id==self.itens).all()
-        inv_json =[ p.retorna_item() for x in inventario]
+        inv_json =[ x.retorna_item() for x in inventario]
         return inv_json
 
 class Item(db.Model):
