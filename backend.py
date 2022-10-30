@@ -1,3 +1,4 @@
+from sqlalchemy import null
 from modelo_config_bd.config import *
 from modelo_config_bd.modelo import *
 
@@ -104,6 +105,11 @@ def criar_personagem():
         dados = request.get_json(force=True)
         print(dados)
         personagem = Personagem(**dados)
+        if db.session.query(Personagem).filter_by(jogadorid=dados['jogadorid'],mestreid=dados['mestreid']).first() is not None:
+            # Este condição impede a criação de vários por uma mesma pessoa.
+            # Uma pessoa só pode criar um personagem para cada mesa que estiver jogando, sendo assim 1 personagem para a relação de 1 jogador e 1 mestre.
+            resposta = jsonify({'resultado':'personagem já cadastrado'})
+            return resposta
         personagem.vd_atual = personagem.vd_max
         personagem.pe_atual = personagem.pe_max
         personagem.san_atual = personagem.san_max 
@@ -112,7 +118,6 @@ def criar_personagem():
         inventario = Inventario(personagem=personagem.id)
         db.session.add(inventario)
         db.session.commit()
-        personagem2 = db.session.query(Personagem.id).filter_by(jogadorid=dados["jogadorid"]).first()
         resposta = jsonify({"resultado":"sucesso","detalhes":personagem.id})
     except Exception as e :
         resposta = jsonify({"resultado":"erro","detalhes":str(e)})
@@ -120,7 +125,7 @@ def criar_personagem():
     return resposta
 
 
-@app.route("/listar/<string:identificador>",methods = ["POST"]) #curl -X GET localhost:5000/lista/player -d '{"id":"Spadez"}' -H "Content-Type: application/json"
+@app.route("/listar/<string:identificador>",methods = ["POST"]) #curl -X POST localhost:5000/listar/player -d '{"id":"2"}' -H "Content-Type: application/json" -i
 def listar(identificador):
     """Realiza a listagem de alguns registros.
 
@@ -131,21 +136,26 @@ def listar(identificador):
         resposta(json): Uma lista erm json com os registros.
     """
     try:
+        resposta = jsonify({"resultado":"ok"})
+        resposta.headers.add("Access-Control-Allow-Origin", "*")
         dados = request.get_json(force=True)
         if identificador == "player": # Caso seja um jogador chamando a função ela retornará o seu personagem.
             person = db.session.query(Personagem).filter_by(id = dados["id"]).first()
             personagem = person.retorna_personagem()
             resposta = personagem
         elif identificador == "mestre": # Caso seja um mestre a função retornará todos os jogadores da sessão.
+            # curl -X POST localhost:5000/listar/mestre -d '{"id":"Spadez"}' -H "Content-Type: application/json" -i
             personagem =  db.session.query(Personagem).filter_by(mestreid = dados["id"]).all()
-            person_json =[ x.retorna_personagem() for x in personagem ]
-            resposta = personagem
-        elif identificador == "inventario": # Retornará o inventario do jogador.
-            inventario = db.session.query(Inventario).filter_by(personagem=dados["id"]).all()
-            itens_json =[ x.retorna_item() for x in inventario]
+            person_json =[ x.retorna_personagem() for x in personagem]
+            resposta = jsonify(person_json)
+        elif identificador == "inventario": # Retornará o inventario do jogador. (Talvez não funcione)
+            #curl -X POST localhost:5000/listar/inventario -d '{"id":"2"}' -H "Content-Type: application/json" -i
+            inv = db.session.query(Inventario.id).filter_by(personagem=dados["id"]).first()
+            itens = db.session.query(Item).filter_by(inventario = inv.id).all()
+            itens_json = [x.retorna_item() for x in itens]
+            resposta = jsonify(itens_json)
     except Exception as e:
         resposta = jsonify({"resultado":"erro","detalhes":str(e)})
-    resposta.headers.add("Access-Control-Allow-Origin", "*")
     return resposta
 
 # curl -X PUT localhost:/update_personagem/simples -d '{"id":"Spadez",dano_sofrido":6,"dano_mental":5}' -H "Content-Type:application/json"
@@ -216,7 +226,7 @@ def update_personagem_simples(identificador):
         resposta.headers.add("Access-Control-Allow-Origin", "*")
         return resposta
 
-@app.route("/deletar_personagem", methods = ["DELETE"])# curl -X DELETE localhost:5000/deletar_personagem -d '{"id":"Spadez"}' -H "Content-Type: application/json"
+@app.route("/deletar_personagem", methods = ["DELETE"])# curl -X DELETE localhost:5000/deletar_personagem -d '{"id":"2"}' -H "Content-Type: application/json"
 def deletar_personagem():
     """Deleta um personagem do banco de dados.
 
@@ -226,6 +236,7 @@ def deletar_personagem():
     try:
         dados = request.get_json(force = True)
         personagem = db.session.query(Personagem).filter_by(id = dados["id"]).first()
+        print(personagem)
         db.session.delete(personagem)
         db.session.commit
         resposta = jsonify({"resultado":"sucesso"})
@@ -234,7 +245,7 @@ def deletar_personagem():
     resposta.headers.add("Access-Control-Allow-Origin", "*")
     return resposta
 
-@app.route("/cadastrar_item",methods=["POST"]) # curl -X POST localhost:5000/ -d '{"id":"Spadez","nome":"adaga","atributo":"agid20","utilidade":"dano:1d4+agi"}' -H "Content-Type: application/json"
+@app.route("/cadastrar_item",methods=["POST"]) # curl -X POST localhost:5000/cadastrar_item -d '{"id":"2","nome":"adaga","atributo":"agid20","utilidade":"dano:1d4+agi"}' -H "Content-Type: application/json"
 def cadastrar_item():
     """Realiza o cadastro de um item.
 
@@ -244,8 +255,8 @@ def cadastrar_item():
     try:
         resposta = jsonify({"resultado":"ok"})
         dados = request.get_json(force=True)
-        inventario = db.session.query(Inventario.id).filter_by(personagem=dados["id"]).first()
-        item = Item(nome=dados["nome"],utilidade=["utilidade"],atributo=["atributo"], inventario = inventario)
+        inv = db.session.query(Inventario.id).filter_by(personagem=dados["id"]).first()
+        item = Item(nome=dados["nome"],utilidade=dados["utilidade"],atributos=dados["atributo"], inventario = inv.id)
         db.session.add(item)
         db.session.commit()
         resposta = jsonify({"resultado":"sucesso"})

@@ -70,15 +70,9 @@ class  Inventario(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     personagem = db.Column(db.Integer,db.ForeignKey(Personagem.id),nullable = False)
 
-    def retorna_inventario(self):
-        inventario = db.session.query(Item.nome,Item.atributos).filter(Item.id==self.itens).all()
-        inv_json =[ x.retorna_item() for x in inventario]
-        return inv_json
-
 class Item(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     inventario = db.Column(db.Integer,db.ForeignKey(Inventario.id),nullable = False)
-    inventarios = db.relationship('Inventario',backref = 'itens')
     nome = db.Column(db.String(254))
     utilidade = db.Column(db.String(254))
     atributos = db.Column(db.String(254))
