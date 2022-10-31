@@ -161,6 +161,8 @@ def listar(identificador):
 # curl -X PUT localhost:/update_personagem/simples -d '{"id":"Spadez",dano_sofrido":6,"dano_mental":5}' -H "Content-Type:application/json"
 @app.route("/update_persongem/<string:identificador>",methods=["PUT"]) 
 def update_personagem_simples(identificador):
+    resposta = jsonify({'resultado':'ok'})
+    resposta.headers.add("Access-Control-Allow-Origin", "*")
     """Realiza o update dos dados de um personagem.
 
     Args:
@@ -185,7 +187,7 @@ def update_personagem_simples(identificador):
                 personagem.san_atual = personagem.san_atual + dados["san_regen"]
             if dados["pe_gasto"]is not None:
                 personagem.pe_atual = personagem.pe_atual - dados["pe_gasto"]
-            db.session.comit()
+            db.session.commit()
             resposta = jsonify({"resultado":"sucesso"})
         except Exception as e:
             resposta = jsonify({"resultado":"erro","detalhes":str(e)})
@@ -220,10 +222,9 @@ def update_personagem_simples(identificador):
                 personagem.pre = dados["pre"]
             if dados["nome"] is not None:
                 personagem.nome = dados["nome"]
-            db.session.comit()
+            db.session.commit()
         except Exception as e:
             resposta = jsonify({"resultado":"erro","detalhes":str(e)})
-        resposta.headers.add("Access-Control-Allow-Origin", "*")
         return resposta
 
 @app.route("/deletar_personagem", methods = ["DELETE"])# curl -X DELETE localhost:5000/deletar_personagem -d '{"id":"2"}' -H "Content-Type: application/json"
@@ -238,7 +239,7 @@ def deletar_personagem():
         personagem = db.session.query(Personagem).filter_by(id = dados["id"]).first()
         print(personagem)
         db.session.delete(personagem)
-        db.session.commit
+        db.session.commit()
         resposta = jsonify({"resultado":"sucesso"})
     except Exception as e:
         resposta = jsonify({"resultado":"erro","detalhes":str(e)})
