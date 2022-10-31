@@ -4,10 +4,10 @@ from modelo_config_bd.modelo import *
 
 @app.route("/")
 def index():
-    print("""Este é o Mundo Paranormal, 
-    um projeto web que visa ajudar no gerenciamento das sessões de tabletopRPGs do sitema ordem paranormal")
-    print("Github: https://github.com/andreluiz301/ficha-rpg-online""")
-    return "oi"
+    s = "Este é o Mundo Paranormal, um projeto web que visa ajudar no gerenciamento das sessões de tabletopRPG do sitema ordem paranormal.\
+        Este projeto não tem nenhuma ligação com a Jambo e o Cellbit, também não possui monetização, sendo assim este site é totalmente gratuito e livre de anuncios.\
+        codigo fonte em: Github: https://github.com/andreluiz301/ficha-rpg-online"
+    return s
     #render_template("index.html")
 
 @app.route("/cadastrar_mestre",methods=["POST"]) # curl -X POST localhost:5000/cadastrar_mestre -d '{"userid":"Spadez","senha":"123456789"}' -H "Content-Type: application/json"
@@ -158,11 +158,9 @@ def listar(identificador):
         resposta = jsonify({"resultado":"erro","detalhes":str(e)})
     return resposta
 
-# curl -X PUT localhost:/update_personagem/simples -d '{"id":"Spadez",dano_sofrido":6,"dano_mental":5}' -H "Content-Type:application/json"
-@app.route("/update_persongem/<string:identificador>",methods=["PUT"]) 
+# curl -X PUT localhost:5000/update_personagem/simples --data '{"id":"2","dano_sofrido":6,"cura":null,"san_regen":null,"dano_mental":5,"pe_gasto":null}' -H "Content-Type:application/json"
+@app.route("/update_personagem/<string:identificador>",methods=["PUT"]) 
 def update_personagem_simples(identificador):
-    resposta = jsonify({'resultado':'ok'})
-    resposta.headers.add("Access-Control-Allow-Origin", "*")
     """Realiza o update dos dados de um personagem.
 
     Args:
@@ -171,6 +169,8 @@ def update_personagem_simples(identificador):
     Returns:
         resposta: Retorna sucesso caso tudo ocorra certo.
     """
+    resposta = jsonify({'resultado':'ok'})
+    resposta.headers.add("Access-Control-Allow-Origin", "*")
     if identificador == "simples":
     # O update simples será utilizado durante as sessões, principalmente durante cenas de combate.
     # Realiza a atualização de poucos atribuitos como vida, sanidade e pontos de esforço.
@@ -191,9 +191,9 @@ def update_personagem_simples(identificador):
             resposta = jsonify({"resultado":"sucesso"})
         except Exception as e:
             resposta = jsonify({"resultado":"erro","detalhes":str(e)})
-        resposta.headers.add("Access-Control-Allow-Origin", "*")
         return resposta
     elif identificador == "complexo":
+    # curl -X PUT localhost:5000/update_personagem/complexo -d '{"id":"2","nex":10,"vd_max":30,"san_max":25,"pe_max":4,"forca":3,"agi":2,"vig":3,"int":0,"pre":2,"nome":null}'
     # O update complexo será utilizado quando um jogador subir de nível ou receber um item que quebra os limites padrões de atributos.
     # Realiza a atualização de quase todos os atributos de um personagem.
         try:
@@ -223,6 +223,7 @@ def update_personagem_simples(identificador):
             if dados["nome"] is not None:
                 personagem.nome = dados["nome"]
             db.session.commit()
+            resposta = jsonify({"resultado":"sucesso"})
         except Exception as e:
             resposta = jsonify({"resultado":"erro","detalhes":str(e)})
         return resposta
