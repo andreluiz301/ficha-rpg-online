@@ -1,4 +1,3 @@
-from sqlalchemy import null
 from modelo_config_bd.config import *
 from modelo_config_bd.modelo import *
 
