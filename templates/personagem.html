@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Personagem</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" href="static/css/personagem.css">
+    </head>
+    <body style="background-color: black">
+        <header></header>
+        <h1>Ficha principal</h1>
+        <div id="status" style="border:1px solid white;">
+            <p>Vida:</p>
+            <p id="vida"></p>
+            <progress id="vida_atual" value="15" max="11"></progress>    
+            <br>
+            <p>Sanidade:</p>
+            <p id="san"></p>
+            <progress id="san_atual" value="19" max="20"></progress>
+            <br> 
+            <p>Pontos de esforço:</p>
+            <p id="pe"></p>
+            <progress id="pe_atual" value="5" max="7"></progress>
+            <br>
+            <button class='modal-'></button>
+        </div>
+        <div id="atributos" style="border:1px solid white;">
+            <img src="static/img/attrs.webp" alt="árvore de atributos" width="280" height="280">
+            <p id="forca"></p>
+            <p id="agi"></p>
+            <p id="int"></p>
+            <p id="vig"></p>
+            <p id="pre"></p>
+        </div>
+        <div id="updates">
+            <form>
+                <label>Dano sofrido</label>
+            </form>
+        </div>
+        <div id="inventario">
+        </div>
+    </body>
+</html>
