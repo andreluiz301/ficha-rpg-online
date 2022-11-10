@@ -9,35 +9,85 @@
     <body style="background-color: black">
         <header></header>
         <h1>Ficha principal</h1>
-        <div id="status" style="border:1px solid white;">
-            <p>Vida:</p>
-            <p id="vida"></p>
-            <progress id="vida_atual" value="15" max="11"></progress>    
-            <br>
-            <p>Sanidade:</p>
-            <p id="san"></p>
-            <progress id="san_atual" value="19" max="20"></progress>
-            <br> 
-            <p>Pontos de esforço:</p>
-            <p id="pe"></p>
-            <progress id="pe_atual" value="5" max="7"></progress>
-            <br>
-            <button class='modal-'></button>
+        <div id="ficha">
+          <div id="status" style="border:1px solid white;">
+              <p class='status_text'>Vida:</p>
+              <p id="vida"></p>
+              <progress id="vida_atual" value="15" max="11"></progress>    
+              <br>
+              <p class="status_text">Sanidade:</p>
+              <p id="san"></p>
+              <progress id="san_atual" value="19" max="20"></progress>
+              <br> 
+              <p class="status_text">Pontos de esforço:</p>
+              <p id="pe"></p>
+              <progress id="pe_atual" value="5" max="7"></progress>
+              <br>
+              <button id='myBtn'>Atualização de status</button>
+          </div>
+          <div id="atributos" style="border:1px solid white;">
+              <button id="for">1</button>
+              <button id="agi">1</button>
+              <button id="int">1</button>
+              <button id="vig">1</button>
+              <button id="pre">1</button>
+              <p id="resultado"></p>
+          </div>
         </div>
-        <div id="atributos" style="border:1px solid white;">
-            <img src="static/img/attrs.webp" alt="árvore de atributos" width="280" height="280">
-            <p id="forca"></p>
-            <p id="agi"></p>
-            <p id="int"></p>
-            <p id="vig"></p>
-            <p id="pre"></p>
+        <div id="inventario" style="border:1px solid white; position: absolute; top: 90%; left:25%;right:25%; text-align: center;">
+          <tr>
+            <th class='status_text'>Nome</th>
+            <th class='status_text'>Utilidade</th>
+            <th class='status_text'>Descrição</th>
+          </tr>
         </div>
-        <div id="updates">
-            <form>
-                <label>Dano sofrido</label>
-            </form>
-        </div>
-        <div id="inventario">
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <botton class="close">&times;</botton>
+                <form>
+                <label>Dano sofrido:</label>
+                <br>
+                <input type="number" name="dano_sofrido" id="dano_sofrido">
+                <br>
+                <label>Cura recebido:</label>
+                <br>
+                <input type="number" name="cura" id="cura">
+                <br>
+                <label>Dano mental:</label>
+                <br>
+                <input type="number" name="dano_mental" id="dano_mental">
+                <br>
+                <label>Sanidade regenerada:</label>
+                <br>
+                <input type="number" name="san_regen" id="san_regen">
+                <br>
+                <label>Pontos de esforço gastos:</label>
+                <br>
+                <input type="number" name="pe_gasto" id="pe_gasto">
+                <br>
+                <label>Pontos de esforço recuperados:</label>
+                <br>
+                <input type="number" name="pe_ganho" id="pe_ganho">
+                <br><br>
+                <input type="submit">
+                </form>
+            </div>
         </div>
     </body>
+<script>
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("myBtn");
+var button = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+button.onclick = function() {
+  modal.style.display = "none";
+}
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
 </html>
