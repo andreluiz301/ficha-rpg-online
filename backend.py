@@ -3,13 +3,14 @@ from modelo_config_bd.modelo import *
 
 @app.route("/")
 def index():
+
     s = "Este é o Mundo Paranormal, um projeto web que visa ajudar no gerenciamento das sessões de tabletopRPG do sitema ordem paranormal.\n \
         Este projeto não tem nenhuma ligação com a Jambo e o Cellbit, também não possui monetização, sendo assim este site é totalmente gratuito e livre de anuncios.\
         codigo fonte em: Github: https://github.com/andreluiz301/ficha-rpg-online."
     return s
     #render_template("index.html")
 
-@app.route("/cadastrar_mestre",methods=["POST"]) # curl -X POST localhost:5000/cadastrar_mestre -d '{"userid":"Spades","senha":"123456789"}' -H "Content-Type: application/json"
+@app.route("/cadastrar_mestre",methods=["POST"]) # curl -X POST localhost:5000/cadastrar_mestre -d '{"userid":"Spadez","senha":"123456789"}' -H "Content-Type: application/json"
 def cadastrar_mestre():
     """Rota responsável por cadastrar um mestre.
     Returns:
