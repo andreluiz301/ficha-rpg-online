@@ -3,9 +3,10 @@ from modelo_config_bd.modelo import *
 
 @app.route("/")
 def index():
-    s = "Este é o Mundo Paranormal, um projeto web que visa ajudar no gerenciamento das sessões de tabletopRPG do sitema ordem paranormal.\
+
+    s = "Este é o Mundo Paranormal, um projeto web que visa ajudar no gerenciamento das sessões de tabletopRPG do sitema ordem paranormal.\n \
         Este projeto não tem nenhuma ligação com a Jambo e o Cellbit, também não possui monetização, sendo assim este site é totalmente gratuito e livre de anuncios.\
-        codigo fonte em: Github: https://github.com/andreluiz301/ficha-rpg-online"
+        codigo fonte em: Github: https://github.com/andreluiz301/ficha-rpg-online."
     return s
     #render_template("index.html")
 
@@ -52,7 +53,7 @@ def cadastrar_jogador():
     resposta.headers.add("Access-Control-Allow-Origin", "*")
     return resposta
 
-@app.route("/login_jogador",methods=["POST"])# curl -X POST localhost:5000/login_jogador -d '{"userid":"Spadez","senha":"123456789"}' -H "Content-Type: application/json"
+@app.route("/login_jogador",methods=["POST"])# curl -X POST localhost:5000/login_jogador -d '{"userid":"Spades","senha":"123456789"}' -H "Content-Type: application/json"
 def logar_jogador():
     """Realiza login de um jogador.
 
@@ -71,7 +72,7 @@ def logar_jogador():
     resposta.headers.add("Access-Control-Allow-Origin", "*")
     return resposta
 
-@app.route("/login_mestre",methods=["POST"])# curl -X POST localhost:5000/login_mestre -d '{"userid":"Spadez","senha":"123456789"}' -H "Content-Type: application/json"
+@app.route("/login_mestre",methods=["POST"])# curl -X POST localhost:5000/login_mestre -d '{"userid":"Spades","senha":"123456789"}' -H "Content-Type: application/json"
 def logar_mestre():
     """Realiza um login de mestre.
 
@@ -93,7 +94,7 @@ def logar_mestre():
 
 @app.route("/criar_personagem",methods=["POST"]) 
 def criar_personagem():
-#  curl -X POST localhost:5000/criar_personagem -d '{"mestreid":"Spadez","jogadorid":"Spadez","nome_do_personagem":"Ricardo","nex":"5%","forca":1,"agi":1,"int":1,"pre":1,"vig":1,"vd_max":20,"san_max":20,"pe_max":10}' -H "Content-Type: application/json"
+#  curl -X POST localhost:5000/criar_personagem -d '{"mestreid":"Spades","jogadorid":"Spades","nome_do_personagem":"Ricardo","nex":"5%","forca":1,"agi":1,"int":1,"pre":1,"vig":1,"vd_max":20,"san_max":20,"pe_max":10}' -H "Content-Type: application/json"
     """Realiza o cadastro de um personagem de rpg.
 
     Returns:
