@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="content first-content">
+            <div class="first-column">
+                <h2 class="title title-primary">Bem-vindo!</h2>
+                <p class="description description-primary">Se você já possui cadastro,</p>
+                <p class="description description-primary">por favor, acesse o sistema com o seu login!</p>
+                <button id="signin" class="btn btn-primary">Login</button>
+            </div>    
+            <div class="second-column">
+                <h2 class="title title-second">Criar conta</h2>
+                <br>
+                <form class="form">
+                    <label class="label-input" for="nomecad">
+                        <i class="far fa-user icon-modify"></i>
+                        <input type="text" placeholder="Nome" id="nomecad">
+                    </label>
+                    <label class="label-input" for="senhacad">
+                        <i class="fas fa-lock icon-modify"></i>
+                        <input type="password" placeholder="Senha" id="senhacad">
+                    </label>
+                    <div class="tata">
+                        <input type="radio" name="radiocad" id="mestrecad" value="mestre">
+                        <label for="mestrecad">Mestre</label>
+                        <input type="radio" name="radiocad" id="jogadorcad" value="mestre">
+                        <label for="jogadorcad">Jogador</label>
+                    </div>
+                    <button class="btn btn-second">cadastrar</button>        
+                </form>
+            </div><!-- second column -->
+        </div><!-- first content -->
+        <div class="content second-content">
+            <div class="first-column">
+                <h2 class="title title-primary">Olá, desempregado!</h2>
+                <p class="description description-primary">Ainda não possui cadastro?</p>
+                <p class="description description-primary">Crie sua conta e começe sua jornada!</p>
+                <button id="signup" class="btn btn-primary">Cadastrar</button>
+            </div>
+            <div class="second-column">
+                <h2 class="title title-second">Fazer login</h2>
+                <br>
+                <form class="form">
+                    <label class="label-input" for="nomelog">
+                        <i class="far fa-envelope icon-modify"></i>
+                        <input type="text" placeholder="Nome" id="nomelog">
+                    </label>
+                    <label class="label-input" for="senhalog">
+                        <i class="fas fa-lock icon-modify"></i>
+                        <input type="password" placeholder="Senha" id="senhalog">
+                    </label>
+                    <div class="tata">
+                        <input type="radio" name="radiolog" id="mestrelog" value="mestre">
+                        <label for="mestrecad">Mestre</label>
+                        <input type="radio" name="radiolog" id="jogadorlog" value="mestre">
+                        <label for="jogadorcad">Jogador</label>
+                    </div>
+                    <a class="password" id="forgot-password" onclick="forgot()" href="#">Esqueceu a senha?</a>
+                    <button class="btn btn-second">Login</button>
+                </form>
+            </div><!-- second column -->
+        </div><!-- second-content -->
+    </div>
+    <script src="static/js/app.js"></script>
+</body>
+</html>
